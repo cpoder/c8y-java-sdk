@@ -1,0 +1,45 @@
+#!/usr/bin/bash
+echo "Checking that go-c8y-cli is installed"
+if ! c8y version 2> /dev/null ; then
+	echo "go-c8y-cli will be installed"
+	sudo apt-get install -y curl gnupg2 apt-transport-https
+	curl https://reubenmiller.github.io/go-c8y-cli-repo/debian/PUBLIC.KEY | gpg --dearmor | sudo tee /usr/share/keyrings/go-c8y-cli-archive-keyring.gpg >/dev/null
+	sudo sh -c "echo 'deb [signed-by=/usr/share/keyrings/go-c8y-cli-archive-keyring.gpg] http://reubenmiller.github.io/go-c8y-cli-repo/debian stable main' >> /etc/apt/sources.list"
+	sudo apt-get update
+	sudo apt-get install go-c8y-cli
+fi
+echo "Checking that at least a Cumulocity session exists"
+if ! c8y sessions list 2> /dev/null ; then
+	echo "A Cumulocity session needs to be created"
+	c8y sessions create
+fi
+echo "Setting session"
+c8y sessions set
+if c8y microservices get --id $1 2> /dev/null ; then
+        echo "Microservice $1 exists"
+else
+        echo "Microservice $1 does not exist and will be created"
+        c8y applications create --name $1 --type MICROSERVICE --key $1-key --data 'requiredRoles=[
+                "ROLE_INVENTORY_READ",
+                "ROLE_INVENTORY_ADMIN",
+                "ROLE_INVENTORY_CREATE",
+                "ROLE_EVENT_READ",
+                "ROLE_EVENT_ADMIN",
+                "ROLE_ALARM_READ",
+                "ROLE_ALARM_ADMIN",
+                "ROLE_IDENTITY_READ",
+                "ROLE_IDENTITY_ADMIN",
+                "ROLE_DEVICE_CONTROL_READ",
+                "ROLE_DEVICE_CONTROL_ADMIN",
+                "ROLE_MEASUREMENT_READ",
+                "ROLE_MEASUREMENT_ADMIN",
+		"ROLE_OPTION_MANAGEMENT_READ",
+		"ROLE_OPTION_MANAGEMENT_ADMIN",
+		"ROLE_NOTIFICATION_2_ADMIN"
+        ]'
+        c8y microservices enable --id $1
+fi
+#SPRING_APPLICATION_JSON=$(c8y microservices get --id $1 | c8y microservices getBootstrapUser --outputTemplate="{server: {port: 8090}, application:{name:'$1'}, C8Y:{baseUrl:'$C8Y_HOST', bootstrap:{tenant:output.tenant, user:output.name, password:output.password}, microservice: {isolation: 'MULTI_TENANT'}}}") java -jar cumulocity-talq/target/cumulocity-talq-1.0-SNAPSHOT.jar
+
+
+SPRING_APPLICATION_JSON=$(c8y microservices get --id $1 | c8y microservices getBootstrapUser --outputTemplate="{server: {port: 8090}, application:{name:'$1'}, c8y:{baseUrl:'$C8Y_HOST', bootstrap:{tenant:output.tenant, name:output.name, password:output.password}, microservice: {isolation: 'MULTI_TENANT'}}}") mvn spring-boot:run
