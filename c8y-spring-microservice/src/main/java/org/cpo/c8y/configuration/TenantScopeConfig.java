@@ -5,10 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@SuppressWarnings("java:S1118")
 public class TenantScopeConfig {
-
-    private TenantScopeConfig() {
-    }
 
     @Bean
     public static BeanFactoryPostProcessor beanFactoryPostProcessor() {
