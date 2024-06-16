@@ -1,8 +1,8 @@
 package org.cpo.c8y;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +38,9 @@ public class MicroserviceSubscriptionsService {
 
     private List<String> userList = new ArrayList<>();
 
+    private ThreadLocal<LinkedList<String>> credentials = ThreadLocal
+            .withInitial(() -> new LinkedList<>());
+
     @PostConstruct
     private void init() {
         log.info("Building initial Cumulocity platform access...");
@@ -47,6 +50,7 @@ public class MicroserviceSubscriptionsService {
                 config.getBootstrap().password());
         log.info("Bootstrap access configured for tenant {}", config.getBootstrap().tenant());
         currentApplicationApi = client.buildClient(CurrentApplicationApi.class);
+        credentials.remove();
     }
 
     @Scheduled(initialDelay = 2000, fixedDelay = 10000)
@@ -74,21 +78,34 @@ public class MicroserviceSubscriptionsService {
         }
     }
 
-    public String getCurrentTenant() {
+    public String getCurrentUserCredentials() {
         var attrs = RequestContextHolder.getRequestAttributes();
-        String tenant = null;
+        String auth = null;
         if (attrs != null) {
             HttpServletRequest request = ((ServletRequestAttributes) attrs).getRequest();
-            String authorization = request.getHeader("Authorization");
-            if (authorization != null && authorization.startsWith("Basic")) {
-                var decoder = Base64.getDecoder();
-                tenant = new String(decoder.decode(authorization.split(" ")[1])).split("/")[0];
-            }
+            auth = request.getHeader("Authorization");
         }
-        return tenant;
+        return auth;
+    }
+
+    public void setCurrentTenant(String tenant) {
+        credentials.get().add(tenant);
+        log.info("Current credentials: {}", credentials.get());
+    }
+
+    public String getCurrentTenant() {
+        return credentials.get().getLast();
     }
 
     public ApplicationUserCollectionUsersInner getMicroserviceCredentials() {
         return detectedUsers.get(getCurrentTenant());
+    }
+
+    public void runForEachTenant(Runnable runnable) {
+        detectedUsers.keySet().forEach(tenant -> {
+            credentials.get().add(tenant);
+            runnable.run();
+            credentials.get().removeLast();
+        });
     }
 }

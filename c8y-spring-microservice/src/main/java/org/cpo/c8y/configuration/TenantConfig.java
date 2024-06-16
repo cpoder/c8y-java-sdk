@@ -1,26 +1,44 @@
 package org.cpo.c8y.configuration;
 
 import org.cpo.c8y.Platform;
+import org.cpo.c8y.annotation.TenantScope;
+import org.cpo.c8y.annotation.UserScope;
 import org.cpo.c8y.api.ManagedObjectsApi;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Scope;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@Primary
 @RequiredArgsConstructor
-@Slf4j
 public class TenantConfig {
     private final Platform platform;
 
-    @Bean
-    @Scope("tenant")
-    public ManagedObjectsApi getManagedObjectsApi() {
-        log.info("Getting ManagedObjectsApi");
-        return platform.buildClient(ManagedObjectsApi.class);
+    @Configuration
+    @Primary
+    class TenantScopeConfig {
+        @Bean(name = { "managedObjectsApi", "tenantManagedObjectsApi" })
+        @TenantScope
+        @Primary
+        public ManagedObjectsApi getManagedObjectsApi() {
+            return platform.buildClient(ManagedObjectsApi.class);
+        }
     }
+
+    @Configuration
+    class UserScopeConfig {
+        @Bean(name = "userManagedObjectsApi")
+        @UserScope
+        public ManagedObjectsApi getManagedObjectsApi() {
+            return platform.buildUserClient(ManagedObjectsApi.class);
+        }
+    }
+
+    @Bean
+    public static BeanFactoryPostProcessor beanFactoryPostProcessor() {
+        return new TenantBeanFactoryPostProcessor();
+    }
+
 }
