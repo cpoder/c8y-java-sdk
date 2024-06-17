@@ -67,7 +67,7 @@ public class TenantConfig {
             return platform.buildClient(ApplicationBinariesApi.class);
         }
 
-        @Bean(name = { "applicationsApi", "tenantApplicationsApi" })
+        @Bean(name = { "applicationsApi" })
         @TenantScope
         @Primary
         public ApplicationsApi getApplicationsApi() {
@@ -263,7 +263,7 @@ public class TenantConfig {
             return platform.buildClient(SystemOptionsApi.class);
         }
 
-        @Bean(name = { "tenantApplicationsApi", "tenantTenantApplicationsApi" })
+        @Bean(name = { "tenantApplicationsApi" })
         @TenantScope
         @Primary
         public TenantApplicationsApi getTenantApplicationsApi() {
@@ -310,252 +310,216 @@ public class TenantConfig {
     class UserScopeConfig {
         @Bean(name = { "userAlarmsApi" })
         @TenantScope
-        @Primary
         public AlarmsApi getAlarmsApi() {
             return platform.buildUserClient(AlarmsApi.class);
         }
 
         @Bean(name = { "userApplicationBinariesApi" })
         @TenantScope
-        @Primary
         public ApplicationBinariesApi getApplicationBinariesApi() {
             return platform.buildUserClient(ApplicationBinariesApi.class);
         }
 
         @Bean(name = { "userApplicationsApi" })
         @TenantScope
-        @Primary
         public ApplicationsApi getApplicationsApi() {
             return platform.buildUserClient(ApplicationsApi.class);
         }
 
         @Bean(name = { "userApplicationVersionsApi" })
         @TenantScope
-        @Primary
         public ApplicationVersionsApi getApplicationVersionsApi() {
             return platform.buildUserClient(ApplicationVersionsApi.class);
         }
 
         @Bean(name = { "userAttachmentsApi" })
         @TenantScope
-        @Primary
         public AttachmentsApi getAttachmentsApi() {
             return platform.buildUserClient(AttachmentsApi.class);
         }
 
         @Bean(name = { "userAuditsApi" })
         @TenantScope
-        @Primary
         public AuditsApi getAuditsApi() {
             return platform.buildUserClient(AuditsApi.class);
         }
 
         @Bean(name = { "userBinariesApi" })
         @TenantScope
-        @Primary
         public BinariesApi getBinariesApi() {
             return platform.buildUserClient(BinariesApi.class);
         }
 
         @Bean(name = { "userBootstrapUserApi" })
         @TenantScope
-        @Primary
         public BootstrapUserApi getBootstrapUserApi() {
             return platform.buildUserClient(BootstrapUserApi.class);
         }
 
         @Bean(name = { "userBulkOperationsApi" })
         @TenantScope
-        @Primary
         public BulkOperationsApi getBulkOperationsApi() {
             return platform.buildUserClient(BulkOperationsApi.class);
         }
 
         @Bean(name = { "userChildOperationsApi" })
         @TenantScope
-        @Primary
         public ChildOperationsApi getChildOperationsApi() {
             return platform.buildUserClient(ChildOperationsApi.class);
         }
 
         @Bean(name = { "userCurrentApplicationApi" })
         @TenantScope
-        @Primary
         public CurrentApplicationApi getCurrentApplicationApi() {
             return platform.buildUserClient(CurrentApplicationApi.class);
         }
 
         @Bean(name = { "userCurrentUserApi" })
         @TenantScope
-        @Primary
         public CurrentUserApi getCurrentUserApi() {
             return platform.buildUserClient(CurrentUserApi.class);
         }
 
         @Bean(name = { "userDeviceCredentialsApi" })
         @TenantScope
-        @Primary
         public DeviceCredentialsApi getDeviceCredentialsApi() {
             return platform.buildUserClient(DeviceCredentialsApi.class);
         }
 
         @Bean(name = { "userDevicePermissionsApi" })
         @TenantScope
-        @Primary
         public DevicePermissionsApi getDevicePermissionsApi() {
             return platform.buildUserClient(DevicePermissionsApi.class);
         }
 
         @Bean(name = { "userDeviceStatisticsApi" })
         @TenantScope
-        @Primary
         public DeviceStatisticsApi getDeviceStatisticsApi() {
             return platform.buildUserClient(DeviceStatisticsApi.class);
         }
 
         @Bean(name = { "userEventsApi" })
         @TenantScope
-        @Primary
         public EventsApi getEventsApi() {
             return platform.buildUserClient(EventsApi.class);
         }
 
         @Bean(name = { "userExternalIdsApi" })
         @TenantScope
-        @Primary
         public ExternalIdsApi getExternalIdsApi() {
             return platform.buildUserClient(ExternalIdsApi.class);
         }
 
         @Bean(name = { "userGroupsApi" })
         @TenantScope
-        @Primary
         public GroupsApi getGroupsApi() {
             return platform.buildUserClient(GroupsApi.class);
         }
 
         @Bean(name = { "userInventoryRolesApi" })
         @TenantScope
-        @Primary
         public InventoryRolesApi getInventoryRolesApi() {
             return platform.buildUserClient(InventoryRolesApi.class);
         }
 
         @Bean(name = { "userLoginOptionsApi" })
         @TenantScope
-        @Primary
         public LoginOptionsApi getLoginOptionsApi() {
             return platform.buildUserClient(LoginOptionsApi.class);
         }
 
         @Bean(name = { "userLoginTokensApi" })
         @TenantScope
-        @Primary
         public LoginTokensApi getLoginTokensApi() {
             return platform.buildUserClient(LoginTokensApi.class);
         }
 
         @Bean(name = { "userManagedObjectsApi" })
         @TenantScope
-        @Primary
         public ManagedObjectsApi getManagedObjectsApi() {
             return platform.buildUserClient(ManagedObjectsApi.class);
         }
 
         @Bean(name = { "userMeasurementsApi" })
         @TenantScope
-        @Primary
         public MeasurementsApi getMeasurementsApi() {
             return platform.buildUserClient(MeasurementsApi.class);
         }
 
         @Bean(name = { "userNewDeviceRequestsApi" })
         @TenantScope
-        @Primary
         public NewDeviceRequestsApi getNewDeviceRequestsApi() {
             return platform.buildUserClient(NewDeviceRequestsApi.class);
         }
 
         @Bean(name = { "userOperationsApi" })
         @TenantScope
-        @Primary
         public OperationsApi getOperationsApi() {
             return platform.buildUserClient(OperationsApi.class);
         }
 
         @Bean(name = { "userOptionsApi" })
         @TenantScope
-        @Primary
         public OptionsApi getOptionsApi() {
             return platform.buildUserClient(OptionsApi.class);
         }
 
         @Bean(name = { "userRetentionRulesApi" })
         @TenantScope
-        @Primary
         public RetentionRulesApi getRetentionRulesApi() {
             return platform.buildUserClient(RetentionRulesApi.class);
         }
 
         @Bean(name = { "userRolesApi" })
         @TenantScope
-        @Primary
         public RolesApi getRolesApi() {
             return platform.buildUserClient(RolesApi.class);
         }
 
         @Bean(name = { "userSubscriptionsApi" })
         @TenantScope
-        @Primary
         public SubscriptionsApi getSubscriptionsApi() {
             return platform.buildUserClient(SubscriptionsApi.class);
         }
 
         @Bean(name = { "userSystemOptionsApi" })
         @TenantScope
-        @Primary
         public SystemOptionsApi getSystemOptionsApi() {
             return platform.buildUserClient(SystemOptionsApi.class);
         }
 
         @Bean(name = { "userTenantApplicationsApi" })
         @TenantScope
-        @Primary
         public TenantApplicationsApi getTenantApplicationsApi() {
             return platform.buildUserClient(TenantApplicationsApi.class);
         }
 
         @Bean(name = { "userTenantsApi" })
         @TenantScope
-        @Primary
         public TenantsApi getTenantsApi() {
             return platform.buildUserClient(TenantsApi.class);
         }
 
         @Bean(name = { "userTokensApi" })
         @TenantScope
-        @Primary
         public TokensApi getTokensApi() {
             return platform.buildUserClient(TokensApi.class);
         }
 
         @Bean(name = { "userTrustedCertificatesApi" })
         @TenantScope
-        @Primary
         public TrustedCertificatesApi getTrustedCertificatesApi() {
             return platform.buildUserClient(TrustedCertificatesApi.class);
         }
 
         @Bean(name = { "userUsageStatisticsApi" })
         @TenantScope
-        @Primary
         public UsageStatisticsApi getUsageStatisticsApi() {
             return platform.buildUserClient(UsageStatisticsApi.class);
         }
 
         @Bean(name = { "userUsersApi" })
         @TenantScope
-        @Primary
         public UsersApi getUsersApi() {
             return platform.buildUserClient(UsersApi.class);
         }

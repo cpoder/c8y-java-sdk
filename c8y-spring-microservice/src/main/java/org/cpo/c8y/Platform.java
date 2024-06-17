@@ -7,6 +7,7 @@ import org.cpo.c8y.ApiClient.Api;
 import org.cpo.c8y.configuration.C8YProperties;
 import org.springframework.stereotype.Component;
 
+import feign.RequestInterceptor;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -15,7 +16,7 @@ public class Platform {
 
     private final C8YProperties config;
 
-    private final MicroserviceCredentialsRequestInterceptor cumulocityCredentialsRequestInterceptor;
+    private final MicroserviceCredentialsRequestInterceptor microserviceCredentialsRequestInterceptor;
 
     private final UserCredentialsRequestInterceptor userCredentialsRequestInterceptor;
 
@@ -23,23 +24,24 @@ public class Platform {
 
     private final Map<Class<?>, Object> userApis = new HashMap<>();
 
-    public ApiClient getApi() {
+    public ApiClient getApi(RequestInterceptor authorizationHandler) {
         var client = new ApiClient();
-        client.addAuthorization("Basic", cumulocityCredentialsRequestInterceptor);
-        client.setBasePath(config.getBaseUrl());
+        client.addAuthorization("Basic", authorizationHandler);
+        client.setBasePath(config.getBaseUrl()).getFeignBuilder().dismiss404();
         return client;
     }
 
+    public ApiClient getMicroserviceApi() {
+        return getApi(microserviceCredentialsRequestInterceptor);
+    }
+
     public ApiClient getUserApi() {
-        var client = new ApiClient();
-        client.addAuthorization("Basic", userCredentialsRequestInterceptor);
-        client.setBasePath(config.getBaseUrl());
-        return client;
+        return getApi(userCredentialsRequestInterceptor);
     }
 
     @SuppressWarnings("unchecked")
     public <A extends Api> A buildClient(Class<A> clientClass) {
-        return (A) microserviceApis.computeIfAbsent(clientClass, key -> getApi().buildClient(clientClass));
+        return (A) microserviceApis.computeIfAbsent(clientClass, key -> getMicroserviceApi().buildClient(clientClass));
     }
 
     @SuppressWarnings("unchecked")

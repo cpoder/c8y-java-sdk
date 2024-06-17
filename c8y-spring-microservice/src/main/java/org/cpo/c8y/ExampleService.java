@@ -1,5 +1,6 @@
 package org.cpo.c8y;
 
+import org.cpo.c8y.api.ExternalIdsApi;
 import org.cpo.c8y.api.ManagedObjectsApi;
 import org.cpo.c8y.model.ManagedObjectCollection;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,14 @@ public class ExampleService {
     // @Autowired
     // @Qualifier("userManagedObjectsApi")
     private final ManagedObjectsApi managedObjectsApi;
+    private final ExternalIdsApi externalIdsApi;
 
     private final MicroserviceSubscriptionsService microserviceSubscriptionsService;
 
     @GetMapping("/test")
     public ResponseEntity<ManagedObjectCollection> getMethodName() {
+        var extId = externalIdsApi.getExternalIDResource("test type", "test id");
+        log.info("External Id: {}", extId);
         var col = managedObjectsApi.getManagedObjectCollectionResource(null);
         return ResponseEntity.ok().body(col);
     }
