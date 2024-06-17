@@ -1,5 +1,8 @@
 package org.cpo.c8y;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.cpo.c8y.ApiClient.Api;
 import org.cpo.c8y.configuration.C8YProperties;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,10 @@ public class Platform {
 
     private final UserCredentialsRequestInterceptor userCredentialsRequestInterceptor;
 
+    private final Map<Class<?>, Object> microserviceApis = new HashMap<>();
+
+    private final Map<Class<?>, Object> userApis = new HashMap<>();
+
     public ApiClient getApi() {
         var client = new ApiClient();
         client.addAuthorization("Basic", cumulocityCredentialsRequestInterceptor);
@@ -30,22 +37,14 @@ public class Platform {
         return client;
     }
 
+    @SuppressWarnings("unchecked")
     public <A extends Api> A buildClient(Class<A> clientClass) {
-        var api = getApi();
-        if (api != null) {
-            return api.buildClient(clientClass);
-        } else {
-            return null;
-        }
+        return (A) microserviceApis.computeIfAbsent(clientClass, key -> getApi().buildClient(clientClass));
     }
 
+    @SuppressWarnings("unchecked")
     public <A extends Api> A buildUserClient(Class<A> clientClass) {
-        var api = getUserApi();
-        if (api != null) {
-            return api.buildClient(clientClass);
-        } else {
-            return null;
-        }
+        return (A) userApis.computeIfAbsent(clientClass, key -> getUserApi().buildClient(clientClass));
     }
 
 }
