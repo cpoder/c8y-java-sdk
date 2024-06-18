@@ -90,7 +90,6 @@ public class MicroserviceSubscriptionsService {
 
     public void setCurrentTenant(String tenant) {
         credentials.get().add(tenant);
-        log.info("Current credentials: {}", credentials.get());
     }
 
     public String getCurrentTenant() {
@@ -101,11 +100,13 @@ public class MicroserviceSubscriptionsService {
         return detectedUsers.get(getCurrentTenant());
     }
 
+    public void runForTenant(String tenant, Runnable runnable) {
+        credentials.get().add(tenant);
+        runnable.run();
+        credentials.get().removeLast();
+    }
+
     public void runForEachTenant(Runnable runnable) {
-        detectedUsers.keySet().forEach(tenant -> {
-            credentials.get().add(tenant);
-            runnable.run();
-            credentials.get().removeLast();
-        });
+        detectedUsers.keySet().forEach(tenant -> runForTenant(tenant, runnable));
     }
 }
