@@ -2,6 +2,7 @@ package org.cpo.c8y.configuration;
 
 import org.cpo.c8y.Platform;
 import org.cpo.c8y.annotation.TenantScope;
+import org.cpo.c8y.annotation.UserScope;
 import org.cpo.c8y.api.AlarmsApi;
 import org.cpo.c8y.api.ApplicationBinariesApi;
 import org.cpo.c8y.api.ApplicationVersionsApi;
@@ -41,16 +42,19 @@ import org.cpo.c8y.api.UsersApi;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@Import(WebMvcConfig.class)
 @RequiredArgsConstructor
 public class TenantConfig {
     private final Platform platform;
 
     @Configuration
+    @TenantScope
     @Primary
     class TenantScopeConfig {
         @Bean(name = { "alarmsApi", "tenantAlarmsApi" })
@@ -307,6 +311,7 @@ public class TenantConfig {
     }
 
     @Configuration
+    @UserScope
     class UserScopeConfig {
         @Bean(name = { "userAlarmsApi" })
         @TenantScope
