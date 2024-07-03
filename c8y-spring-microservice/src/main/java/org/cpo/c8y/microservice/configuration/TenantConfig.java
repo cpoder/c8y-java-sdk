@@ -1,8 +1,8 @@
-package org.cpo.c8y.configuration;
+package org.cpo.c8y.microservice.configuration;
 
-import org.cpo.c8y.Platform;
-import org.cpo.c8y.annotation.TenantScope;
-import org.cpo.c8y.annotation.UserScope;
+import org.cpo.c8y.microservice.Platform;
+import org.cpo.c8y.microservice.annotation.TenantScope;
+import org.cpo.c8y.microservice.annotation.UserScope;
 import org.cpo.c8y.api.AlarmsApi;
 import org.cpo.c8y.api.ApplicationBinariesApi;
 import org.cpo.c8y.api.ApplicationVersionsApi;

@@ -1,4 +1,4 @@
-package org.cpo.c8y.annotation;
+package org.cpo.c8y.microservice.annotation;
 
 import static org.springframework.context.annotation.ScopedProxyMode.*;
 
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Scope(value = "user", proxyMode = TARGET_CLASS)
-public @interface UserScope {
+@Scope(value = "tenant", proxyMode = TARGET_CLASS)
+public @interface TenantScope {
 
 }

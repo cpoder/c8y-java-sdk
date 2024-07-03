@@ -1,4 +1,4 @@
-package org.cpo.c8y.exception;
+package org.cpo.c8y.microservice.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

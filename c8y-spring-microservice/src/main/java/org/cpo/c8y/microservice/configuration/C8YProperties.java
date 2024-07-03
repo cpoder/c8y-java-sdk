@@ -1,4 +1,4 @@
-package org.cpo.c8y.configuration;
+package org.cpo.c8y.microservice.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

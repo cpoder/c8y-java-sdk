@@ -13,7 +13,7 @@ import feign.Param;
 import feign.QueryMap;
 import feign.RequestLine;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2024-06-12T15:25:13.061619582+02:00[Europe/Paris]", comments = "Generator version: 7.5.0")
+@jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2024-06-12T15:25:13.061619582+02:00[Europe/Paris]", comments = "Generator version: 7.5.0")
 public interface DeviceStatisticsApi extends ApiClient.Api {
 
   /**

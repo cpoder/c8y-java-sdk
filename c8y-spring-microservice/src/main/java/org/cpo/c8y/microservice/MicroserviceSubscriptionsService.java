@@ -1,4 +1,4 @@
-package org.cpo.c8y;
+package org.cpo.c8y.microservice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,12 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
+import org.cpo.c8y.ApiClient;
 import org.cpo.c8y.api.CurrentApplicationApi;
-import org.cpo.c8y.configuration.C8YProperties;
-import org.cpo.c8y.event.NewSubscribedTenant;
-import org.cpo.c8y.event.UnsubscribedTenant;
+import org.cpo.c8y.microservice.configuration.C8YProperties;
+import org.cpo.c8y.microservice.event.NewSubscribedTenant;
+import org.cpo.c8y.microservice.event.UnsubscribedTenant;
 import org.cpo.c8y.model.ApplicationUserCollectionUsersInner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

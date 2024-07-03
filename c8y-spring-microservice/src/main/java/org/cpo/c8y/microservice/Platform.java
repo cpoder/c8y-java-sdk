@@ -1,10 +1,11 @@
-package org.cpo.c8y;
+package org.cpo.c8y.microservice;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.cpo.c8y.ApiClient;
 import org.cpo.c8y.ApiClient.Api;
-import org.cpo.c8y.configuration.C8YProperties;
+import org.cpo.c8y.microservice.configuration.C8YProperties;
 import org.springframework.stereotype.Component;
 
 import feign.RequestInterceptor;

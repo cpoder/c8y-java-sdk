@@ -1,4 +1,4 @@
-package org.cpo.c8y.configuration;
+package org.cpo.c8y.microservice.configuration;
 
 public record Bootstrap(
         String tenant,

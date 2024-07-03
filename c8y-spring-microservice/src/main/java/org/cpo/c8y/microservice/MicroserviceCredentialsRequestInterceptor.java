@@ -1,4 +1,4 @@
-package org.cpo.c8y;
+package org.cpo.c8y.microservice;
 
 import java.util.Base64;
 
