@@ -1,6 +1,7 @@
 package org.cpo.c8y.microservice;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,6 +99,13 @@ public class MicroserviceSubscriptionsService {
 
     public ApplicationUserCollectionUsersInner getMicroserviceCredentials() {
         return detectedUsers.get(getCurrentTenant());
+    }
+
+    public String getMicroserviceBase64Credentials() {
+        var currentCredentials = detectedUsers.get(getCurrentTenant());
+        var stringCredentials = currentCredentials.getTenant() + "/" + currentCredentials.getName() + ":"
+                + currentCredentials.getPassword();
+        return Base64.getEncoder().encodeToString(stringCredentials.getBytes());
     }
 
     public void runForTenant(String tenant, Runnable runnable) {

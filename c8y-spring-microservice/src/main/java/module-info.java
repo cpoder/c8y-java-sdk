@@ -12,6 +12,10 @@ module c8y.spring.microservice {
     requires transitive spring.aop;
     requires transitive lombok;
     requires transitive jakarta.servlet;
+    requires org.cometd.client.websocket.jakarta;
+    requires ch.qos.logback.classic;
+    requires org.cometd.api.client;
+    requires org.eclipse.jetty.util.ajax;
 
     exports org.cpo.c8y.microservice;
     exports org.cpo.c8y.microservice.annotation;
