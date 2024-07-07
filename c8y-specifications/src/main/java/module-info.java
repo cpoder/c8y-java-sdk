@@ -11,13 +11,11 @@ module c8y.specifications {
     requires transitive com.fasterxml.jackson.databind;
     requires transitive com.fasterxml.jackson.datatype.jsr310;
     requires transitive org.openapitools.jackson.nullable;
-    requires io.swagger.v3.oas.annotations;
     requires jakarta.validation;
-    requires spring.context;
     requires jakarta.servlet;
-    requires spring.web;
 
     exports org.cpo.c8y;
+    exports org.cpo.c8y.auth;
     exports org.cpo.c8y.api;
     exports org.cpo.c8y.model;
 }

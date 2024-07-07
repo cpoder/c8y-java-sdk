@@ -6,37 +6,36 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import feign.okhttp.OkHttpClient;
+import org.cpo.c8y.auth.ApiErrorDecoder;
+import org.cpo.c8y.auth.ApiKeyAuth;
+import org.cpo.c8y.auth.HttpBasicAuth;
+import org.cpo.c8y.auth.HttpBearerAuth;
+import org.cpo.c8y.auth.OAuth;
+import org.cpo.c8y.auth.OAuth.AccessTokenListener;
+import org.cpo.c8y.auth.OAuthFlow;
+import org.cpo.c8y.auth.OauthClientCredentialsGrant;
+import org.cpo.c8y.auth.OauthPasswordGrant;
+import org.openapitools.jackson.nullable.JsonNullableModule;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.openapitools.jackson.nullable.JsonNullableModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import feign.Feign;
 import feign.RequestInterceptor;
-import feign.form.FormEncoder;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
-import feign.slf4j.Slf4jLogger;
-import org.cpo.c8y.auth.HttpBasicAuth;
-import org.cpo.c8y.auth.HttpBearerAuth;
-import org.cpo.c8y.auth.ApiKeyAuth;
-import org.cpo.c8y.ApiResponseDecoder;
-
-import org.cpo.c8y.auth.ApiErrorDecoder;
-import org.cpo.c8y.auth.OAuth;
-import org.cpo.c8y.auth.OAuth.AccessTokenListener;
-import org.cpo.c8y.auth.OAuthFlow;
-import org.cpo.c8y.auth.OauthPasswordGrant;
-import org.cpo.c8y.auth.OauthClientCredentialsGrant;
 import feign.Retryer;
+import feign.form.FormEncoder;
+import feign.jackson.JacksonEncoder;
+import feign.okhttp.OkHttpClient;
+import feign.slf4j.Slf4jLogger;
 
 @jakarta.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2024-07-06T16:41:42.957588513+02:00[Europe/Paris]", comments = "Generator version: 7.7.0")
 public class ApiClient {
   private static final Logger log = Logger.getLogger(ApiClient.class.getName());
 
-  public interface Api {}
+  public interface Api {
+  }
 
   protected ObjectMapper objectMapper;
   private String basePath = "http://localhost";
@@ -47,17 +46,17 @@ public class ApiClient {
     apiAuthorizations = new LinkedHashMap<String, RequestInterceptor>();
     objectMapper = createObjectMapper();
     feignBuilder = Feign.builder()
-                .client(new OkHttpClient())
-                .encoder(new FormEncoder(new JacksonEncoder(objectMapper)))
-                .decoder(new ApiResponseDecoder(objectMapper))
-                .errorDecoder(new ApiErrorDecoder())
-                .retryer(new Retryer.Default(0, 0, 2))
-                .logger(new Slf4jLogger());
+        .client(new OkHttpClient())
+        .encoder(new FormEncoder(new JacksonEncoder(objectMapper)))
+        .decoder(new ApiResponseDecoder(objectMapper))
+        .errorDecoder(new ApiErrorDecoder())
+        .retryer(new Retryer.Default(0, 0, 2))
+        .logger(new Slf4jLogger());
   }
 
   public ApiClient(String[] authNames) {
     this();
-    for(String authName : authNames) {
+    for (String authName : authNames) {
       log.log(Level.FINE, "Creating authentication {0}", authName);
       RequestInterceptor auth = null;
       if ("Basic".equals(authName)) {
@@ -65,7 +64,8 @@ public class ApiClient {
       } else if ("OAI-Secure".equals(authName)) {
         auth = new HttpBearerAuth("bearer");
       } else if ("SSO".equals(authName)) {
-        auth = buildOauthRequestInterceptor(OAuthFlow.APPLICATION, "", "/tenant/oauth?grant_type=authorization_code&code=<CODE>", "");
+        auth = buildOauthRequestInterceptor(OAuthFlow.APPLICATION, "",
+            "/tenant/oauth?grant_type=authorization_code&code=<CODE>", "");
       } else if ("JWT".equals(authName)) {
         auth = new HttpBearerAuth("bearer");
       } else if ("JWT-IAM".equals(authName)) {
@@ -81,14 +81,16 @@ public class ApiClient {
 
   /**
    * Basic constructor for single auth name
+   * 
    * @param authName
    */
   public ApiClient(String authName) {
-    this(new String[]{authName});
+    this(new String[] { authName });
   }
 
   /**
    * Helper constructor for single api key
+   * 
    * @param authName
    * @param apiKey
    */
@@ -137,7 +139,8 @@ public class ApiClient {
     return objectMapper;
   }
 
-  private RequestInterceptor buildOauthRequestInterceptor(OAuthFlow flow, String authorizationUrl, String tokenUrl, String scopes) {
+  private RequestInterceptor buildOauthRequestInterceptor(OAuthFlow flow, String authorizationUrl, String tokenUrl,
+      String scopes) {
     switch (flow) {
       case PASSWORD:
         return new OauthPasswordGrant(tokenUrl, scopes);
@@ -148,24 +151,24 @@ public class ApiClient {
     }
   }
 
-
-  public ObjectMapper getObjectMapper(){
+  public ObjectMapper getObjectMapper() {
     return objectMapper;
   }
 
   public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    this.objectMapper = objectMapper;
   }
 
   /**
    * Creates a feign client for given API interface.
    *
    * Usage:
-   *    ApiClient apiClient = new ApiClient();
-   *    apiClient.setBasePath("http://localhost:8080");
-   *    XYZApi api = apiClient.buildClient(XYZApi.class);
-   *    XYZResponse response = api.someMethod(...);
-   * @param <T> Type
+   * ApiClient apiClient = new ApiClient();
+   * apiClient.setBasePath("http://localhost:8080");
+   * XYZApi api = apiClient.buildClient(XYZApi.class);
+   * XYZResponse response = api.someMethod(...);
+   * 
+   * @param <T>         Type
    * @param clientClass Client class
    * @return The Client
    */
@@ -175,63 +178,71 @@ public class ApiClient {
 
   /**
    * Select the Accept header's value from the given accepts array:
-   *   if JSON exists in the given array, use it;
-   *   otherwise use all of them (joining into a string)
+   * if JSON exists in the given array, use it;
+   * otherwise use all of them (joining into a string)
    *
    * @param accepts The accepts array to select from
    * @return The Accept header to use. If the given array is empty,
-   *   null will be returned (not to set the Accept header explicitly).
+   *         null will be returned (not to set the Accept header explicitly).
    */
   public String selectHeaderAccept(String[] accepts) {
-    if (accepts.length == 0) return null;
-    if (StringUtil.containsIgnoreCase(accepts, "application/json")) return "application/json";
+    if (accepts.length == 0)
+      return null;
+    if (StringUtil.containsIgnoreCase(accepts, "application/json"))
+      return "application/json";
     return StringUtil.join(accepts, ",");
   }
 
   /**
    * Select the Content-Type header's value from the given array:
-   *   if JSON exists in the given array, use it;
-   *   otherwise use the first one of the array.
+   * if JSON exists in the given array, use it;
+   * otherwise use the first one of the array.
    *
    * @param contentTypes The Content-Type array to select from
    * @return The Content-Type header to use. If the given array is empty,
-   *   JSON will be used.
+   *         JSON will be used.
    */
   public String selectHeaderContentType(String[] contentTypes) {
-    if (contentTypes.length == 0) return "application/json";
-    if (StringUtil.containsIgnoreCase(contentTypes, "application/json")) return "application/json";
+    if (contentTypes.length == 0)
+      return "application/json";
+    if (StringUtil.containsIgnoreCase(contentTypes, "application/json"))
+      return "application/json";
     return contentTypes[0];
   }
 
   /**
    * Helper method to configure the bearer token.
+   * 
    * @param bearerToken the bearer token.
    */
   public void setBearerToken(String bearerToken) {
-    HttpBearerAuth apiAuthorization =  getAuthorization(HttpBearerAuth.class);
+    HttpBearerAuth apiAuthorization = getAuthorization(HttpBearerAuth.class);
     apiAuthorization.setBearerToken(bearerToken);
   }
 
   /**
    * Helper method to configure the supplier of bearer tokens.
+   * 
    * @param tokenSupplier the supplier of bearer tokens.
    */
   public void setBearerToken(Supplier<String> tokenSupplier) {
-    HttpBearerAuth apiAuthorization =  getAuthorization(HttpBearerAuth.class);
+    HttpBearerAuth apiAuthorization = getAuthorization(HttpBearerAuth.class);
     apiAuthorization.setBearerToken(tokenSupplier);
   }
 
   /**
    * Helper method to configure the first api key found
+   * 
    * @param apiKey API key
    */
   public void setApiKey(String apiKey) {
-    ApiKeyAuth apiAuthorization =  getAuthorization(ApiKeyAuth.class);
+    ApiKeyAuth apiAuthorization = getAuthorization(ApiKeyAuth.class);
     apiAuthorization.setApiKey(apiKey);
   }
 
   /**
    * Helper method to configure the username/password for basic auth
+   * 
    * @param username Username
    * @param password Password
    */
@@ -242,7 +253,8 @@ public class ApiClient {
 
   /**
    * Helper method to configure the client credentials for Oauth
-   * @param clientId Client ID
+   * 
+   * @param clientId     Client ID
    * @param clientSecret Client secret
    */
   public void setClientCredentials(String clientId, String clientSecret) {
@@ -252,9 +264,10 @@ public class ApiClient {
 
   /**
    * Helper method to configure the username/password for Oauth password grant
-   * @param username Username
-   * @param password Password
-   * @param clientId Client ID
+   * 
+   * @param username     Username
+   * @param password     Password
+   * @param clientId     Client ID
    * @param clientSecret Client secret
    */
   public void setOauthPassword(String username, String password, String clientId, String clientSecret) {
@@ -263,9 +276,11 @@ public class ApiClient {
   }
 
   /**
-   * Helper method to pre-set the oauth access token of the first oauth found in the apiAuthorizations (there should be only one)
+   * Helper method to pre-set the oauth access token of the first oauth found in
+   * the apiAuthorizations (there should be only one)
+   * 
    * @param accessToken Access Token
-   * @param expiresIn Validity period in seconds
+   * @param expiresIn   Validity period in seconds
    */
   public void setAccessToken(String accessToken, Integer expiresIn) {
     OAuth apiAuthorization = getAuthorization(OAuth.class);
@@ -274,9 +289,10 @@ public class ApiClient {
 
   /**
    * Helper method to configure the oauth accessCode/implicit flow parameters
-   * @param clientId Client ID
+   * 
+   * @param clientId     Client ID
    * @param clientSecret Client secret
-   * @param redirectURI Redirect URI
+   * @param redirectURI  Redirect URI
    */
   public void configureAuthorizationFlow(String clientId, String clientSecret, String redirectURI) {
     throw new RuntimeException("Not implemented");
@@ -284,6 +300,7 @@ public class ApiClient {
 
   /**
    * Configures a listener which is notified when a new access token is received.
+   * 
    * @param accessTokenListener Access token listener
    */
   public void registerAccessTokenListener(AccessTokenListener accessTokenListener) {
@@ -293,6 +310,7 @@ public class ApiClient {
 
   /**
    * Gets request interceptor based on authentication name
+   * 
    * @param authName Authentication name
    * @return Request Interceptor
    */
@@ -302,7 +320,8 @@ public class ApiClient {
 
   /**
    * Adds an authorization to be used by the client
-   * @param authName Authentication name
+   * 
+   * @param authName      Authentication name
    * @param authorization Request interceptor
    */
   public void addAuthorization(String authName, RequestInterceptor authorization) {
@@ -315,9 +334,9 @@ public class ApiClient {
 
   private <T extends RequestInterceptor> T getAuthorization(Class<T> type) {
     return (T) apiAuthorizations.values()
-                                .stream()
-                                .filter(requestInterceptor -> type.isAssignableFrom(requestInterceptor.getClass()))
-                                .findFirst()
-                                .orElseThrow(() -> new RuntimeException("No Oauth authentication or OAuth configured!"));
-    }
+        .stream()
+        .filter(requestInterceptor -> type.isAssignableFrom(requestInterceptor.getClass()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("No Oauth authentication or OAuth configured!"));
+  }
 }
